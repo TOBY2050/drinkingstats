@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Abstract Drink Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+      min-height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin-top: 20px;
+    }
+    button {
+      font-size: 1.5rem;
+      padding: 1rem 2rem;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #drinkBtn {
+      background-color: #ff6f61;
+      color: #fff;
+    }
+    #exportBtn {
+      background-color: #6b5b95;
+      color: #fff;
+    }
+    #clearBtn {
+      background-color: #88b04b;
+      color: #fff;
+    }
+    #chartLink {
+      display: inline-block;
+      background-color: #009688;
+      color: #fff;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    #message {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #444;
+    }
+    #drinkList {
+      margin-top: 2rem;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Drink Tracker</h1>
+  <div>
+    <button id="drinkBtn">Record a Drink</button>
+    <button id="exportBtn">Export Data (CSV)</button>
+    <button id="clearBtn">Clear History</button>
+    <a href="drink_chart.html" id="chartLink">View Chart</a>
+  </div>
+  <div id="message"></div>
+  <div id="drinkList">
+    <h2>Drink History</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date & Time</th>
+        </tr>
+      </thead>
+      <tbody id="drinkTableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let drinks = JSON.parse(localStorage.getItem('drinks')) || [];
+
+      function updateTable() {
+        const tableBody = document.getElementById('drinkTableBody');
+        tableBody.innerHTML = '';
+        drinks.forEach((drink, index) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${index + 1}</td><td>${drink}</td>`;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('drinkBtn').addEventListener('click', () => {
+        const now = new Date().toLocaleString();
+        drinks.push(now);
+        localStorage.setItem('drinks', JSON.stringify(drinks));
+        updateTable();
+      });
+
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        if (confirm('Clear all drink history?')) {
+          drinks = [];
+          localStorage.setItem('drinks', JSON.stringify(drinks));
+          updateTable();
+        }
+      });
+
+      updateTable();
+    });
+  </script>
+</body>
+</html>
